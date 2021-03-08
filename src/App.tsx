@@ -20,7 +20,9 @@ interface IPerson {
 
 const App: FC = () => {
   const [contacts, setContacts] = useState<IPerson[]>([]);
+  const [filteredContacts, setFilteredContacts] = useState<IPerson[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [query, setQuery] = useState<string>('');
 
   useEffect(() => {
     loadContacts();
@@ -30,18 +32,26 @@ const App: FC = () => {
     setIsLoading(true);
     const response = await fetch(API_URL);
     const data = await response.json();
-    setContacts(
-      data.sort((a: IPerson, b: IPerson) =>
-        a.last_name > b.last_name ? 1 : b.last_name > a.last_name ? -1 : 0
-      )
+    const sortedData = data.sort((a: IPerson, b: IPerson) =>
+      a.last_name > b.last_name ? 1 : b.last_name > a.last_name ? -1 : 0
     );
+    setContacts(sortedData);
+    setFilteredContacts(sortedData);
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    setFilteredContacts(
+      contacts.filter((person: IPerson) =>
+        person.first_name.toLowerCase().includes(query.toLowerCase())
+      )
+    );
+  }, [query]);
 
   return (
     <>
       <Header />
-      <SearchInput />
+      <SearchInput getQuery={(q: string) => setQuery(q)} />
       <ul>
         {isLoading ? (
           <div className="text-center mt-3">
@@ -50,7 +60,7 @@ const App: FC = () => {
             </Spinner>
           </div>
         ) : (
-          contacts.map((person: IPerson) => {
+          filteredContacts.map((person: IPerson) => {
             return (
               <li key={person.id}>
                 <Person
