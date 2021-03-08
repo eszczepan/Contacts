@@ -41,11 +41,15 @@ const App: FC = () => {
   };
 
   useEffect(() => {
-    setFilteredContacts(
-      contacts.filter((person: IPerson) =>
-        person.first_name.toLowerCase().includes(query.toLowerCase())
-      )
-    );
+    const newContacts = [];
+    for (let i = 0; i < contacts.length; i++) {
+      const currentPerson = contacts[i];
+      const fullName = `${currentPerson.first_name} ${currentPerson.last_name}`;
+      if (fullName.toLowerCase().includes(query.trim().toLowerCase()))
+        newContacts.push(currentPerson);
+    }
+
+    setFilteredContacts(newContacts);
   }, [contacts, query]);
 
   return (
