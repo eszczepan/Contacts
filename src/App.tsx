@@ -46,7 +46,7 @@ const App: FC = () => {
         person.first_name.toLowerCase().includes(query.toLowerCase())
       )
     );
-  }, [query]);
+  }, [contacts, query]);
 
   return (
     <>
