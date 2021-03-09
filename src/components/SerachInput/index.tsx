@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import search from 'assets/icons/search.svg';
 
 interface IProps {
@@ -6,7 +6,16 @@ interface IProps {
 }
 
 const SearchInput: FC<IProps> = ({ getQuery }) => {
-  const handleSearch = (q: string) => getQuery(q);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    const handleSearch = (q: string) => getQuery(q);
+    const delay = setTimeout(() => {
+      handleSearch(searchTerm);
+    }, 700);
+
+    return () => clearTimeout(delay);
+  }, [searchTerm, getQuery]);
 
   return (
     <div className="mb-1">
@@ -20,7 +29,7 @@ const SearchInput: FC<IProps> = ({ getQuery }) => {
         }}
         className="form-control border-0 pl-5"
         id="search"
-        onChange={(e) => handleSearch(e.target.value)}
+        onChange={(e) => setSearchTerm(e.target.value)}
       ></input>
     </div>
   );
