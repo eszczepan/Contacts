@@ -16,6 +16,7 @@ interface IPerson {
   gender: string;
   id: number;
   last_name: string;
+  isChecked: boolean;
 }
 
 const App: FC = () => {
@@ -23,6 +24,7 @@ const App: FC = () => {
   const [filteredContacts, setFilteredContacts] = useState<IPerson[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [query, setQuery] = useState<string>('');
+  const [checked, setChecked] = useState<any[]>([]);
 
   useEffect(() => {
     loadContacts();
@@ -44,13 +46,26 @@ const App: FC = () => {
     const newContacts = [];
     for (let i = 0; i < contacts.length; i++) {
       const currentPerson = contacts[i];
-      const fullName = `${currentPerson.first_name} ${currentPerson.last_name}`;
-      if (fullName.toLowerCase().includes(query.trim().toLowerCase()))
-        newContacts.push(currentPerson);
+      let isChecked = false;
+      checked.forEach((id: number) =>
+        id === currentPerson.id ? (isChecked = true) : null
+      );
+      const fullName = `${currentPerson.first_name}${currentPerson.last_name}`.toLowerCase();
+      if (fullName.includes(query.replace(/\s/g, '').toLowerCase()))
+        newContacts.push({ ...currentPerson, isChecked });
     }
 
     setFilteredContacts(newContacts);
-  }, [contacts, query]);
+  }, [query]);
+
+  const handleSelect = (id: number, check: boolean) => {
+    if (!check) {
+      setChecked((prevState) => [...prevState, id]);
+    } else {
+      setChecked((prevState) => prevState.filter((el) => el !== id));
+    }
+    console.log(checked);
+  };
 
   return (
     <>
@@ -73,6 +88,10 @@ const App: FC = () => {
                   firstName={person.first_name}
                   id={person.id}
                   lastName={person.last_name}
+                  isChecked={
+                    person.isChecked === undefined ? false : person.isChecked
+                  }
+                  getCheck={handleSelect}
                 />
               </li>
             );

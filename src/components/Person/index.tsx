@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 
 interface IProps {
   avatar: string;
@@ -6,9 +6,26 @@ interface IProps {
   firstName: string;
   id: number;
   lastName: string;
+  isChecked: boolean;
+  getCheck(id: Number, checked: Boolean): void;
 }
 
-const Person: FC<IProps> = ({ avatar, email, firstName, id, lastName }) => {
+const Person: FC<IProps> = ({
+  avatar,
+  email,
+  firstName,
+  id,
+  lastName,
+  isChecked,
+  getCheck,
+}) => {
+  const [checked, setChecked] = useState<boolean>(isChecked);
+
+  const handleChange = () => {
+    setChecked((prevState) => !prevState);
+    getCheck(id, checked);
+  };
+
   return (
     <div className="d-flex align-items-center border-bottom p-1 pr-4">
       {avatar === null ? (
@@ -37,6 +54,8 @@ const Person: FC<IProps> = ({ avatar, email, firstName, id, lastName }) => {
         type="checkbox"
         name={firstName}
         id={id.toString()}
+        checked={checked}
+        onChange={handleChange}
       />
     </div>
   );
