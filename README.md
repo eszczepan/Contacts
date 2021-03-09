@@ -3,7 +3,7 @@
 A project that shows a list of contacts in alphabetical order fetch from external API. This is a Progressive Web Application which means it is intended to work on any platform that uses a standards-compliant browser, including both desktop and mobile devices. In the application you can search for contacts by first and last name and you can selecting them using checkboxes.
 
 <p align="center">
-  <img src="assets/images/contacts.png" alt="Contacts-display">
+  <img src="./src/assets/images/contacts.png" alt="Contacts-display">
 </p>
 
 ## Tech/framework
